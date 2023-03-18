@@ -41,4 +41,21 @@ internal class ListTest {
         assertEquals(expected, tail(Nil))
     }
 
+    @Test
+    fun `test dropWhile function when it receives non empty list`() {
+        val expected = List.of(5, 3, 6, 4)
+        assertEquals(expected, dropWhile(List.of(4, 5, 3, 6, 4)) { a -> a % 2 == 0 })
+    }
+
+    @Test
+    fun `test init function when it receives non empty list`() {
+        val expected = List.of(4, 5, 3, 6)
+        assertEquals(expected, init(List.of(4, 5, 3, 6, 4)))
+    }
+
+    @Test
+    fun `test init function when it receives empty list`() {
+        val expected = Nil
+        assertEquals(expected, init(Nil))
+    }
 }

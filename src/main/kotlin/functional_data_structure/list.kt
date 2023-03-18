@@ -8,8 +8,15 @@ sealed class List<out A> {
         }
     }
 }
+
 object Nil : List<Nothing>()
 data class Cons<out A>(val head: A, val tail: List<A>) : List<A>()
+
+fun <A> append(a1: List<A>, a2: List<A>): List<A> =
+    when (a1) {
+        is Nil -> a2
+        is Cons -> Cons(a1.head, append(a1.tail, a2))
+    }
 
 /**
  * Implement the function tail for removing the first element of a List.
@@ -34,6 +41,36 @@ fun <A> setHead(xs: List<A>, x: A): List<A> = when (xs) {
  * don’t need to make a copy of the entire List.
  */
 tailrec fun <A> drop(list: List<A>, number: Int): List<A> {
-        return if (number == 0) list
-        else drop(tail(list), number - 1)
+    return if (number == 0) list
+    else drop(tail(list), number - 1)
+}
+
+/**
+ * Implement dropWhile, which removes elements from the List prefix as long as they match a predicate.
+ */
+tailrec fun <A> dropWhile(l: List<A>, f: (A) -> Boolean): List<A> =
+    when (l) {
+        is Cons -> when (f(l.head)) {
+            true -> dropWhile(l.tail, f)
+            else -> l
+        }
+
+        else -> l
+    }
+
+/**
+ * Implement a function, init, that returns a List consisting of all but the last element of a List.
+ * So, given List(1, 2, 3, 4), init should return List(1, 2, 3).
+ */
+fun <A> init(list: List<A>): List<A> {
+    tailrec fun <A> go(list: List<A>, accumulatedList: List<A>): List<A> =
+        when (list) {
+            is Cons -> when (list.tail) {
+                is Cons -> go(list.tail, append(accumulatedList, List.of(list.head)))
+                is Nil -> accumulatedList
+            }
+            else -> Nil
+        }
+
+    return go(list, Nil)
 }
