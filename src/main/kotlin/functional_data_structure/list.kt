@@ -25,7 +25,7 @@ fun <A> tail(xs: List<A>): List<A> = when (xs) {
  */
 fun <A> setHead(xs: List<A>, x: A): List<A> = when (xs) {
     is Nil -> Cons(x, Nil)
-    else -> Cons(x, xs)
+    else -> Cons(x, tail(xs))
 }
 
 /**
@@ -33,10 +33,7 @@ fun <A> setHead(xs: List<A>, x: A): List<A> = when (xs) {
  * Note that this function takes time proportional only to the number of elements being dropped—you
  * don’t need to make a copy of the entire List.
  */
-fun <A> drop(l: List<A>, n: Int): List<A> {
-    tailrec fun go(l: List<A>, number: Int): List<A> {
-        return if (number == n) l
-        else go(tail(l), number +1)
-    }
-    return go(l, 0)
+tailrec fun <A> drop(list: List<A>, number: Int): List<A> {
+        return if (number == 0) list
+        else drop(tail(list), number - 1)
 }
